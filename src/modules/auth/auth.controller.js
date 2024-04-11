@@ -1,7 +1,9 @@
 class AuthController {
   register = (req, res, next) => {
+    const payload = req.body;
+
     res.json({
-      result: "Register",
+      result: payload,
       message: "Successful Register",
       meta: null,
     });
@@ -16,7 +18,6 @@ class AuthController {
   };
 }
 
+const authCtrl = new AuthController();
 
-const authCtrl = new AuthController()
-
-module.exports = authCtrl
+module.exports = authCtrl;

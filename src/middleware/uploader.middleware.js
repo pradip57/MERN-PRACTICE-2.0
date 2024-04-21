@@ -1,5 +1,6 @@
 const multer = require('multer')
 const fs = require('fs')
+const { generateRandomString } = require('../utilities/helpers')
 
 const setPath = (path) => {
     return (req,res,next) => {
@@ -20,6 +21,11 @@ const myStorage = multer.diskStorage({
 
         cb(null, path)
     },
+
+    filename: (req,file,cb) => {
+
+        
+    }
 
 })
 

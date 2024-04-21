@@ -23,9 +23,11 @@ const myStorage = multer.diskStorage({
     },
 
     filename: (req,file,cb) => {
-
-        
+        const ext = file.filename.split(".").pop()
+        const filename = Date.now()+"-"+generateRandomString(20)+"."+ext
+        cb(null,filename)
     }
+    
 
 })
 

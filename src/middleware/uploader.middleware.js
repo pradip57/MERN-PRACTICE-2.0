@@ -11,7 +11,7 @@ const setPath = (path) => {
 
 const myStorage = multer.diskStorage({
   destination: (req, file, cb) => {
-    const path = "./public/uploads" + req.uploadDir;
+    const path = "./public/uploads/" + req.uploadDir;
     if (!fs.existsSync(path)) {
       fs.mkdirSync(path, { recursive: true });
     }
@@ -20,14 +20,14 @@ const myStorage = multer.diskStorage({
   },
 
   filename: (req, file, cb) => {
-    const ext = file.filename.split(".").pop();
+    const ext = file.originalname.split(".").pop();
     const filename = Date.now() + "-" + generateRandomString(20) + "." + ext;
     cb(null, filename);
   },
 });
 
 const imageFilter = (req, file, cb) => {
-  const ext = file.filename.split(".").pop();
+  const ext = file.originalname.split(".").pop();
   const allowed = ["jpg", "jpeg", "png", "svg", "webp", "gif", "bmp"];
   if (allowed.includes(ext.toLowerCase())) {
     cb(null, true);
@@ -39,4 +39,9 @@ const imageFilter = (req, file, cb) => {
 const uploader = multer({
   storage: myStorage,
   fileFilter: imageFilter,
+  limits: {
+    fileSize: 3000000,
+  },
 });
+
+module.exports = { uploader, setPath };

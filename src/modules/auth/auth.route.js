@@ -5,6 +5,7 @@ const authCtrl = require('./auth.controller')
 const { registerDTO } = require('./auth.dto')
 
 authRoute.post('/register',setPath('users'),uploader.single('image'),bodyValidator(registerDTO),authCtrl.register)
+authRoute.get('/activate/:token',authCtrl.activate)
 authRoute.post('/login',authCtrl.login)
 
 

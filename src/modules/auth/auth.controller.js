@@ -1,9 +1,8 @@
-require("dotenv").config()
+require("dotenv").config();
 const Joi = require("joi");
 const { generateRandomString } = require("../../utilities/helpers");
 const bcryptjs = require("bcryptjs");
 const mailServc = require("../../services/mail.services");
-
 
 class AuthController {
   register = async (req, res, next) => {
@@ -54,6 +53,17 @@ class AuthController {
       message: "Successful Login",
       meta: null,
     });
+  };
+
+  activate = (req, res, next) => {
+    try {
+      const token = req.params.token;
+      //ToDO:identify user
+      //status : active
+      //activateToken: null
+    } catch (exception) {
+      next(exception);
+    }
   };
 }
 

@@ -20,9 +20,9 @@ class MailServices {
     }
   }
 
-  sendEmail = (to, subject, message, attachments = null) => {
+  sendEmail = async (to, subject, message, attachments = null) => {
     try {
-      const mailStatus = this.transport.sendMail({
+      const mailStatus =await this.transport.sendMail({
         to: to,
         from: process.env.SMTP_FROM,
         subject: subject,

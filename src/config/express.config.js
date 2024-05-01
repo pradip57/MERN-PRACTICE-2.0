@@ -1,4 +1,7 @@
 const express = require("express");
+
+require('./db.config')
+
 const mainRoute = require("./routing.config");
 const helmet = require("helmet");
 const cors = require("cors");

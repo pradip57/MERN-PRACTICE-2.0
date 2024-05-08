@@ -1,26 +1,15 @@
 require("dotenv").config();
 const Joi = require("joi");
-const { generateRandomString } = require("../../utilities/helpers");
-const bcryptjs = require("bcryptjs");
+
+
 const mailServc = require("../../services/mail.services");
+const authServ = require("./auth.service");
 
 class AuthController {
   register = async (req, res, next) => {
     try {
-      const payload = req.body;
-
-      payload.password = bcryptjs.hashSync(payload.password, 10);
-      payload.status = "inactive";
-      payload.activationToken = generateRandomString(50);
-
-      if (req.file) {
-        payload.image = req.file.filename;
-      }
-
-      const registeredData = {
-        ...payload,
-        _id: "123",
-      };
+      const data = authServ.transformRegisteredData(req);
+      const registeredData = await authServ.createUser(data);
 
       await mailServc.sendEmail(
         registeredData.email,
@@ -38,7 +27,7 @@ class AuthController {
       );
 
       res.json({
-        result: payload,
+        result: registeredData,
         message: "Successful Register",
         meta: null,
       });

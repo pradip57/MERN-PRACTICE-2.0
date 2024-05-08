@@ -11,5 +11,6 @@ mongoose
   })
   .catch((err) => {
     console.log("Error connecting mongoDb");
+    
     process.exit(1);
   });

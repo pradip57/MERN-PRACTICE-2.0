@@ -10,7 +10,7 @@ const Joi = require('joi')
       .required(),
     confirmPassword: Joi.string().valid(Joi.ref("password")).required(),
     role: Joi.string()
-      .pattern(/^(staff|customer)$/)
+      .pattern(/^(seller|customer|admin)$/)
       .required(),
   });
   

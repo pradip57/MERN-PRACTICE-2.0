@@ -24,6 +24,24 @@ class AuthServices {
     const user = await new UserModel(data);
     return await user.save();
   };
+
+  findOneUser = async (filter) => {
+    try {
+      const userObject = await UserModel.findOne(filter);
+      return userObject;
+    } catch (exception) {
+      throw exception;
+    }
+  };
+
+  updateUser = async (userId, data) => {
+    try {
+      const result = await UserModel.findByIdAndUpdate(userId, { $set: data });
+      return result;
+    } catch (exception) {
+      throw exception;
+    }
+  };
 }
 
 const authServ = new AuthServices();

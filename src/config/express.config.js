@@ -1,6 +1,6 @@
 const express = require("express");
 
-require('./db.config')
+require("./db.config");
 
 const mainRoute = require("./routing.config");
 const helmet = require("helmet");
@@ -36,6 +36,7 @@ app.use((error, req, res, next) => {
   let codeStatus = error.code || 500;
   let data = error.data || null;
   let message = error.message || "Internal Server Error";
+  console.log(error);
 
   if (error instanceof Joi.ValidationError) {
     codeStatus = 422;

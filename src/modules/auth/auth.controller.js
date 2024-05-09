@@ -1,5 +1,7 @@
 require("dotenv").config();
 const Joi = require("joi");
+const bcryptjs = require("bcryptjs");
+const jwt = require("jsonwebtoken");
 
 const mailServc = require("../../services/mail.services");
 const authServ = require("./auth.service");
@@ -35,12 +37,59 @@ class AuthController {
     }
   };
 
-  login = (req, res, next) => {
-    res.json({
-      result: "Login",
-      message: "Successful Login",
-      meta: null,
-    });
+  login = async (req, res, next) => {
+    try {
+      const { email, password } = req.body;
+
+      const userDetail = await authServ.findOneUser({
+        email: email,
+      });
+
+      if (!userDetail) {
+        throw { code: 400, message: "User not found" };
+      }
+
+      if (bcryptjs.compareSync(password, userDetail.password)) {
+        if (userDetail.status !== "active") {
+          throw { code: 400, message: "Your account has not been activated" };
+        }
+
+        const accessToken = jwt.sign(
+          { sub: userDetail._id },
+          process.env.JWT_SECRET
+        );
+
+        const refreshToken = jwt.sign(
+          {
+            sub: userDetail._id,
+          },
+          process.env.JWT_SECRET,
+          {
+            expiresIn: "7d",
+          }
+        );
+
+        res.json({
+          result: {
+            detail: {
+              _id: userDetail._id,
+              name: userDetail.name,
+              email: userDetail.email,
+              status: userDetail.status,
+              role: userDetail.role,
+            },
+            accessToken: accessToken,
+            refreshToken: refreshToken,
+          },
+          message: "Logged In succesfully",
+          meta: null,
+        });
+      } else {
+        throw { code: 400, message: "Credentials doesnot match" };
+      }
+    } catch (exception) {
+      next(exception);
+    }
   };
 
   activate = async (req, res, next) => {

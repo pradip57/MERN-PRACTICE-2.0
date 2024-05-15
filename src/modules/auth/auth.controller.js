@@ -118,6 +118,24 @@ class AuthController {
       next(exception);
     }
   };
+
+  getLoggedIn = (req,res,next) => {
+    const loggedInUser = req.authUser
+    const response = {
+      _id:loggedInUser._id,
+      name:loggedInUser.name,
+      email:loggedInUser.email,
+      status:loggedInUser.status,
+      role:loggedInUser.role,
+      image:loggedInUser?.image
+    }
+
+    res.json({
+      result:response,
+      message:"Your profile",
+      meta:null
+    })
+  };
 }
 
 const authCtrl = new AuthController();

@@ -119,22 +119,34 @@ class AuthController {
     }
   };
 
-  getLoggedIn = (req,res,next) => {
-    const loggedInUser = req.authUser
+  getLoggedIn = (req, res, next) => {
+    const loggedInUser = req.authUser;
     const response = {
-      _id:loggedInUser._id,
-      name:loggedInUser.name,
-      email:loggedInUser.email,
-      status:loggedInUser.status,
-      role:loggedInUser.role,
-      image:loggedInUser?.image
-    }
+      _id: loggedInUser._id,
+      name: loggedInUser.name,
+      email: loggedInUser.email,
+      status: loggedInUser.status,
+      role: loggedInUser.role,
+      image: loggedInUser?.image,
+    };
 
     res.json({
-      result:response,
-      message:"Your profile",
-      meta:null
-    })
+      result: response,
+      message: "Your profile",
+      meta: null,
+    });
+  };
+
+  adminAccess = async (req, res, next) => {
+    try {
+      res.json({
+        result: "admin access",
+        message: "I am admin",
+        meta: null,
+      });
+    } catch (exception) {
+      next(exception);
+    }
   };
 }
 

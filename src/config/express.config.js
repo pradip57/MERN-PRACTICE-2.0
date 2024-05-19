@@ -51,6 +51,16 @@ app.use((error, req, res, next) => {
     }
   }
 
+  if (+codeStatus === 11000) {
+    codeStatus = 400;
+    data = {};
+    const field = Object.keys(error.keyPattern);
+    field.map((fieldname) => {
+      data[fieldname] = fieldname + " must be unique";
+    });
+    message = " Validation failed";
+  }
+
   res.status(codeStatus).json({
     result: data,
     message: message,

@@ -21,7 +21,7 @@ class AuthServices {
   };
 
   createUser = async (data) => {
-    const user = await new UserModel(data);
+    const user = new UserModel(data);
     return await user.save();
   };
 

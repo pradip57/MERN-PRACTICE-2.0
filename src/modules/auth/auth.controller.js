@@ -127,7 +127,7 @@ class AuthController {
       email: loggedInUser.email,
       status: loggedInUser.status,
       role: loggedInUser.role,
-      image: loggedInUser?.image,
+      image: loggedInUser.image,
     };
 
     res.json({

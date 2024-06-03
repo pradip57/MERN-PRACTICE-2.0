@@ -32,18 +32,18 @@ class bannerServices {
     }
   };
 
-  count = async () => {
+  count = async ({filter}) => {
     try {
-      const countData = await BannerModel.countDocuments();
+      const countData = await BannerModel.countDocuments(filter);
       return countData;
     } catch (exception) {
       throw exception;
     }
   };
 
-  listAll = async ({ limit, skip }) => {
+  listAll = async ({ limit, skip, filter = {} }) => {
     try {
-      const response = await BannerModel.find()
+      const response = await BannerModel.find(filter)
         .sort({ _id: "desc" })
         .skip(skip)
         .limit(limit);

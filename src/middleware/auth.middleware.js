@@ -23,6 +23,7 @@ const auth = async (req, res, next) => {
     req.authUser = userDetail;
     next();
   } catch (exception) {
+    console.log(exception)
     next({ code: 401, message: "Unauthorized Access" });
   }
 };

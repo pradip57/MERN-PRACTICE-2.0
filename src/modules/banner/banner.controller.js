@@ -22,8 +22,16 @@ class BannerController {
       const limit = +req.query.limit || 15;
       const skip = (page - 1) * limit;
 
-      const data = await bannerServ.listAll({ limit: limit, skip: skip });
-      const countData = await bannerServ.count();
+      let filter = {};
+
+      if (req.query.search) {
+        filter = {
+          title: new RegExp(req.query.search, "i"),
+        };
+      }
+
+      const data = await bannerServ.listAll({ limit: limit, skip: skip, filter:filter });
+      const countData = await bannerServ.count({filter:filter});
       res.json({
         result: data,
         message: "Banner Lists",

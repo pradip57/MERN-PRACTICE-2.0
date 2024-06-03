@@ -15,6 +15,28 @@ class BannerController {
       next(exception);
     }
   };
+
+  index = async (req, res, next) => {
+    try {
+      const page = +req.query.page || 1;
+      const limit = +req.query.limit || 15;
+      const skip = (page - 1) * limit;
+
+      const data = await bannerServ.listAll({ limit: limit, skip: skip });
+      const countData = await bannerServ.count();
+      res.json({
+        result: data,
+        message: "Banner Lists",
+        meta: {
+          limit: limit,
+          page: page,
+          total: countData,
+        },
+      });
+    } catch (exception) {
+      next(exception);
+    }
+  };
 }
 
 const bannerCtrl = new BannerController();

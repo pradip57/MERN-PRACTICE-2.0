@@ -16,6 +16,8 @@ bannerRoute
     uploader.single("image"),
     bodyValidator(bannerCreateDTO),
     bannerCtrl.create
-  );
+  )
+
+  .get(auth, allowRole("admin"), bannerCtrl.index);
 
 module.exports = bannerRoute;

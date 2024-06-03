@@ -20,4 +20,6 @@ bannerRoute
 
   .get(auth, allowRole("admin"), bannerCtrl.index);
 
+bannerRoute.route("/:id").get(auth, allowRole("admin"), bannerCtrl.show);
+
 module.exports = bannerRoute;

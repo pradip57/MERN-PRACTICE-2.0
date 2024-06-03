@@ -30,8 +30,12 @@ class BannerController {
         };
       }
 
-      const data = await bannerServ.listAll({ limit: limit, skip: skip, filter:filter });
-      const countData = await bannerServ.count({filter:filter});
+      const data = await bannerServ.listAll({
+        limit: limit,
+        skip: skip,
+        filter: filter,
+      });
+      const countData = await bannerServ.count({ filter: filter });
       res.json({
         result: data,
         message: "Banner Lists",
@@ -40,6 +44,22 @@ class BannerController {
           page: page,
           total: countData,
         },
+      });
+    } catch (exception) {
+      next(exception);
+    }
+  };
+
+  show = async (req, res, next) => {
+    try {
+      const detail = await bannerServ.findOne({
+        _id: req.params.id,
+      });
+
+      res.json({
+        result: detail,
+        message: "Banner detail fetched",
+        meta: null,
       });
     } catch (exception) {
       next(exception);

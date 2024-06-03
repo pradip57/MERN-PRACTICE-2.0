@@ -32,7 +32,7 @@ class bannerServices {
     }
   };
 
-  count = async ({filter}) => {
+  count = async ({ filter }) => {
     try {
       const countData = await BannerModel.countDocuments(filter);
       return countData;
@@ -48,6 +48,18 @@ class bannerServices {
         .skip(skip)
         .limit(limit);
       return response;
+    } catch (exception) {
+      throw exception;
+    }
+  };
+
+  findOne = async (filter) => {
+    try {
+      const data =await BannerModel.findOne(filter)
+      if(!data){
+        throw {code:400, message:"Data not found"}
+      }
+      return data
     } catch (exception) {
       throw exception;
     }

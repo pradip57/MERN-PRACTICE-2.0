@@ -23,6 +23,28 @@ class bannerServices {
     }
   };
 
+  transformUpdateData = (req, existingData) => {
+    try {
+      const data = {
+        ...req.body,
+      };
+
+      console.log(data);
+
+      if (req.file) {
+        data.image = req.file.filename;
+      } else {
+        data.image = existingData.image;
+      }
+
+      data.updatedBy = req.authUser._id;
+
+      return data;
+    } catch (exception) {
+      throw exception;
+    }
+  };
+
   store = async (data) => {
     try {
       const bannerData = new BannerModel(data);
@@ -55,11 +77,47 @@ class bannerServices {
 
   findOne = async (filter) => {
     try {
-      const data =await BannerModel.findOne(filter)
-      if(!data){
-        throw {code:400, message:"Data not found"}
+      const data = await BannerModel.findOne(filter);
+      if (!data) {
+        throw { code: 400, message: "Data not found" };
       }
-      return data
+      return data;
+    } catch (exception) {
+      throw exception;
+    }
+  };
+
+  update = async (filter, data) => {
+    try {
+      const updateBanner = await BannerModel.findOneAndUpdate(filter, {
+        $set: data,
+      });
+      return updateBanner;
+    } catch (exception) {
+      throw exception;
+    }
+  };
+
+  deleteOne = async (filter) => {
+    try {
+      const response = await BannerModel.findOneAndDelete(filter);
+      if (!response) {
+        throw { code: 404, message: "Banner doesnot exists" };
+      }
+      return response;
+    } catch (exception) {
+      throw exception;
+    }
+  };
+
+  getForHome = async () => {
+    try {
+      const data = await BannerModel.find({
+        status: "active",
+      })
+        .sort({ _id: "desc" })
+        .limit(10);
+      return data;
     } catch (exception) {
       throw exception;
     }

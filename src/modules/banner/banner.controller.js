@@ -65,6 +65,53 @@ class BannerController {
       next(exception);
     }
   };
+
+  update = async (req, res, next) => {
+    try {
+      const existingData = await bannerServ.findOne({ _id: req.params.id });
+      const payload = bannerServ.transformUpdateData(req, existingData);
+      const updateStatus = await bannerServ.update(
+        { _id: req.params.id },
+        payload
+      );
+
+      res.json({
+        result: updateStatus,
+        message: "Banner Updated Succesfully",
+        meta: null,
+      });
+    } catch (exception) {
+      next(exception);
+    }
+  };
+
+  delete = async (req, res, next) => {
+    try {
+      const exists = await bannerServ.findOne({ _id: req.params.id });
+      const status = await bannerServ.deleteOne({ _id: req.params.id });
+
+      res.json({
+        result: status,
+        message: "banner deleted Succesfully",
+        meta: null,
+      });
+    } catch (exception) {
+      next(exception);
+    }
+  };
+
+  listForHome = async (req, res, next) => {
+    try {
+      const list = await bannerServ.getForHome();
+      res.json({
+        result: list,
+        message: "Banner listed for home page",
+        meta: null,
+      });
+    } catch (exception) {
+      next(exception);
+    }
+  };
 }
 
 const bannerCtrl = new BannerController();

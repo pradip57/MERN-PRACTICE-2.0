@@ -78,8 +78,10 @@ class AuthController {
               status: userDetail.status,
               role: userDetail.role,
             },
-            accessToken: accessToken,
-            refreshToken: refreshToken,
+            token: {
+              accessToken: accessToken,
+              refreshToken: refreshToken,
+            },
           },
           message: "Logged In succesfully",
           meta: null,

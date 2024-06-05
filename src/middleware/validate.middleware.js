@@ -10,6 +10,7 @@ const bodyValidator = (schema, fileUploadField = null) => {
           }
         });
       }
+
       await schema.validateAsync(data, { abortEarly: false });
       next();
     } catch (exception) {

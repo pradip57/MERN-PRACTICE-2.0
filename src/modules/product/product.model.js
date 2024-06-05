@@ -6,16 +6,47 @@ const ProductSchema = new mongoose.Schema(
       type: String,
       required: true,
       min: 2,
-      unique: true,
     },
     slug: {
       type: String,
       unique: true,
     },
-    parentId:{
-      type:mongoose.Types.ObjectId,
-      ref:"Product",
-      default:null
+    summary: {
+      type: String,
+      required: true,
+    },
+    description: String,
+    price: {
+      type: Number,
+      min: 100,
+      required: true,
+    },
+    discount: {
+      type: Number,
+      min: 0,
+      max: 90,
+      default: 0,
+    },
+    afterDiscount: {
+      type: Number,
+      required: true,
+      min: 0,
+    },
+    categories: [
+      {
+        type: mongoose.Types.ObjectId,
+        ref: "Category",
+        default: null,
+      },
+    ],
+    brand: {
+      type: mongoose.Types.ObjectId,
+      ref: "Brand",
+      default: null,
+    },
+    isFeatured: {
+      type: Boolean,
+      default: false,
     },
     status: {
       type: String,
@@ -23,9 +54,15 @@ const ProductSchema = new mongoose.Schema(
       default: "inactive",
     },
 
-    image: {
-      type: String,
-      required: true,
+    images: [
+      {
+        type: String,
+      },
+    ],
+    sellerId: {
+      type: mongoose.Types.ObjectId,
+      ref: "User",
+      default: null,
     },
     createdBy: {
       type: mongoose.Types.ObjectId,

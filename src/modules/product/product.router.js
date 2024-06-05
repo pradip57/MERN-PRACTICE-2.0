@@ -15,7 +15,7 @@ productRoute
     auth,
     allowRole("admin"),
     setPath("products"),
-    uploader.single("image"),
+    uploader.array("images"),
     bodyValidator(productCreateDTO),
     productCtrl.create
   )
@@ -29,8 +29,8 @@ productRoute
     auth,
     allowRole("admin"),
     setPath("products"),
-    uploader.single("image"),
-    bodyValidator(productUpdateDTO, ["image"]),
+    uploader.array("images"),
+    bodyValidator(productUpdateDTO, ["images"]),
     productCtrl.update
   )
   .delete(auth, allowRole("admin"), productCtrl.delete);

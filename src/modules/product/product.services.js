@@ -2,7 +2,25 @@ const ProductModel = require("./product.model");
 const slugify = require("slugify");
 
 class productServices {
-  transformCreateData = (req) => {
+  uniqueSlug = async (slug) => {
+    try {
+      const productExists = await ProductModel.findOne({
+        slug: slug,
+      });
+
+      if (productExists) {
+        const time = Date.now();
+        slug = slug + "-" + time;
+        await this.uniqueSlug(slug); //this line not understand
+      } else {
+        return slug;
+      }
+    } catch (exception) {
+      throw exception;
+    }
+  };
+
+  transformCreateData = async (req) => {
     try {
       const data = {
         ...req.body,
@@ -10,16 +28,43 @@ class productServices {
 
       console.log(data);
 
-      if (req.file) {
-        data.image = req.file.filename;
+      if (req.files) {
+        let images = [];
+
+        req.files.map((image) => {
+          images.push = image.filename;
+        });
+        data.images = images;
+      } else {
+        data.images = null;
       }
 
-      data.slug = slugify(data.title, {
+      const slug = slugify(data.title, {
         lower: true,
       });
 
-      if (!data.parentId || data.parentId === "null" || data.parentId === "") {
-        data.parentId = null;
+      data.slug = await this.uniqueSlug(slug);
+
+      //afterDiscount
+
+      data.afterDiscount = data.price - (data.price * data.discount) / 100;
+
+      // fopreign key null
+
+      if (!data.brand || data.brand === "null" || data.brand === "") {
+        data.brand = null;
+      }
+
+      if (!data.sellerId || data.sellerId === "null" || data.sellerId === "") {
+        data.sellerId = null;
+      }
+
+      if (
+        !data.categories ||
+        data.categories === "null" ||
+        data.categories === ""
+      ) {
+        data.categories = null;
       }
 
       data.createdBy = req.authUser._id;
@@ -30,7 +75,7 @@ class productServices {
     }
   };
 
-  transformUpdateData = (req, existingData) => {
+  transformUpdateData = async (req, existingData) => {
     try {
       const data = {
         ...req.body,
@@ -38,14 +83,34 @@ class productServices {
 
       console.log(data);
 
-      if (req.file) {
-        data.image = req.file.filename;
-      } else {
-        data.image = existingData.image;
+      let images = [...existingData.images];
+      if (req.files) {
+        req.files.map((image) => {
+          images.push = image.filename;
+        });
+      }
+      data.images = images;
+
+      //afterDiscount
+
+      data.afterDiscount = data.price - (data.price * data.discount) / 100;
+
+      // fopreign key null
+
+      if (!data.brand || data.brand === "null" || data.brand === "") {
+        data.brand = null;
       }
 
-      if (!data.parentId || data.parentId === "null" || data.parentId === "") {
-        data.parentId = null;
+      if (!data.sellerId || data.sellerId === "null" || data.sellerId === "") {
+        data.sellerId = null;
+      }
+
+      if (
+        !data.categories ||
+        data.categories === "null" ||
+        data.categories === ""
+      ) {
+        data.categories = null;
       }
 
       data.updatedBy = req.authUser._id;
@@ -77,7 +142,9 @@ class productServices {
   listAll = async ({ limit, skip, filter = {} }) => {
     try {
       const response = await ProductModel.find(filter)
-        .populate("parentId", ["_id", "title", "slug"])
+        .populate("categories", ["_id", "title", "slug"])
+        .populate("brand", ["_id", "title", "slug"])
+        .populate("sellerId", ["_id", "name", "email", "role"])
         .populate("createdBy", ["_id", "name", "email", "role"])
         .populate("updatedBy", ["_id", "name", "email", "role"])
         .sort({ _id: "desc" })
@@ -92,9 +159,11 @@ class productServices {
   findOne = async (filter) => {
     try {
       const data = await ProductModel.findOne(filter)
-        .populate("parentId", ["_id", "title", "slug"])
-        .populate("createdBy", ["_id", "name", "email", "role"])
-        .populate("updatedBy", ["_id", "name", "email", "role"]);
+      .populate("categories", ["_id", "title", "slug"])
+      .populate("brand", ["_id", "title", "slug"])
+      .populate("sellerId", ["_id", "name", "email", "role"])
+      .populate("createdBy", ["_id", "name", "email", "role"])
+      .populate("updatedBy", ["_id", "name", "email", "role"])
       if (!data) {
         throw { code: 400, message: "Data not found" };
       }
@@ -132,9 +201,11 @@ class productServices {
       const data = await ProductModel.find({
         status: "active",
       })
-        .populate("parentId", ["_id", "title", "slug"])
-        .populate("createdBy", ["_id", "name", "email", "role"])
-        .populate("updatedBy", ["_id", "name", "email", "role"])
+      .populate("categories", ["_id", "title", "slug"])
+      .populate("brand", ["_id", "title", "slug"])
+      .populate("sellerId", ["_id", "name", "email", "role"])
+      .populate("createdBy", ["_id", "name", "email", "role"])
+      .populate("updatedBy", ["_id", "name", "email", "role"])
         .sort({ _id: "desc" })
         .limit(10);
       return data;

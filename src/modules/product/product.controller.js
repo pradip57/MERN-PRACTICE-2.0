@@ -3,7 +3,7 @@ const productServ = require("./product.services");
 class ProductController {
   create = async (req, res, next) => {
     try {
-      const payload = productServ.transformCreateData(req);
+      const payload =await productServ.transformCreateData(req);
       const createdProduct = await productServ.store(payload);
 
       res.json({

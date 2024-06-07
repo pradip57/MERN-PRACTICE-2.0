@@ -3,6 +3,7 @@ const bannerRoute = require("../modules/banner/banner.router");
 const brandRoute = require("../modules/brand/brand.router");
 const categoryRoute = require("../modules/category/category.router");
 const productRoute = require("../modules/product/product.router");
+const userRoute = require("../modules/user/user.route");
 
 const mainRoute = require("express").Router();
 
@@ -11,5 +12,6 @@ mainRoute.use("/banner", bannerRoute);
 mainRoute.use("/brand", brandRoute);
 mainRoute.use("/category", categoryRoute);
 mainRoute.use("/product", productRoute);
+mainRoute.use('/user',userRoute)
 
 module.exports = mainRoute;

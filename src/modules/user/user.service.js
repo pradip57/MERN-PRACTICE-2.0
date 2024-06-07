@@ -1,0 +1,32 @@
+const UserModel = require("./user.model");
+
+class UserServices {
+  count = async ({ filter }) => {
+    try {
+      const countData = await UserModel.countDocuments(filter);
+      return countData;
+    } catch (exception) {
+      throw exception;
+    }
+  };
+
+  listAll = async ({ limit, skip, filter = {} }) => {
+    try {
+      const response = await UserModel.find(filter)
+        .populate("categories", ["_id", "title", "slug"])
+        .populate("brand", ["_id", "title", "slug"])
+        .populate("sellerId", ["_id", "name", "email", "role"])
+        .populate("createdBy", ["_id", "name", "email", "role"])
+        .populate("updatedBy", ["_id", "name", "email", "role"])
+        .sort({ _id: "desc" })
+        .skip(skip)
+        .limit(limit);
+      return response;
+    } catch (exception) {
+      throw exception;
+    }
+  };
+}
+
+const userServ = new UserServices();
+module.exports = userServ;

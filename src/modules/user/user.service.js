@@ -13,9 +13,7 @@ class UserServices {
   listAll = async ({ limit, skip, filter = {} }) => {
     try {
       const response = await UserModel.find(filter)
-        .populate("categories", ["_id", "title", "slug"])
-        .populate("brand", ["_id", "title", "slug"])
-        .populate("sellerId", ["_id", "name", "email", "role"])
+
         .populate("createdBy", ["_id", "name", "email", "role"])
         .populate("updatedBy", ["_id", "name", "email", "role"])
         .sort({ _id: "desc" })

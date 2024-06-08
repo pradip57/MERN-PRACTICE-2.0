@@ -3,6 +3,7 @@ const slugify = require("slugify");
 
 class categoryServices {
   transformCreateData = (req) => {
+    
     try {
       const data = {
         ...req.body,

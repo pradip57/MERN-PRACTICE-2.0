@@ -29,9 +29,9 @@ const productCreateDTO = joi.object({
 
 const productUpdateDTO = joi.object({
   title: joi.string().min(2).required(),
-  summary: joi.string().required(),
+  summary: joi.string(),
   description: joi.string().allow(null, "").optional().default(null),
-  price: joi.number().min(100).required(),
+  price: joi.number().min(100),
   discount: joi.number().min(0).max(90).default(0),
   brand: joi.string().allow(null, "").optional().default(null),
   isFeatured: joi.boolean().default(false),

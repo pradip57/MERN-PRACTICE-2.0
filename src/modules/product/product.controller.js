@@ -69,12 +69,12 @@ class ProductController {
   update = async (req, res, next) => {
     try {
       const existingData = await productServ.findOne({ _id: req.params.id });
-      const payload = productServ.transformUpdateData(req, existingData);
+      const payload =await productServ.transformUpdateData(req, existingData);
       const updateStatus = await productServ.update(
         { _id: req.params.id },
         payload
       );
-
+      
       res.json({
         result: updateStatus,
         message: "Product Updated Succesfully",

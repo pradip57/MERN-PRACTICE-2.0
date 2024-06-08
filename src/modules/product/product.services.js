@@ -11,7 +11,7 @@ class productServices {
       if (productExists) {
         const time = Date.now();
         slug = slug + "-" + time;
-        await this.uniqueSlug(slug); //this line not understand
+        return await this.uniqueSlug(slug); //this line not understand
       } else {
         return slug;
       }
@@ -29,15 +29,20 @@ class productServices {
       console.log(data);
 
       if (req.files) {
-        let images = [];
+        
+        if (!(req.files.length === 0)) {
+          let images = [];
 
-        req.files.map((image) => {
-          images.push = image.filename;
-        });
-        data.images = images;
-      } else {
-        data.images = null;
-      }
+          req.files.map((image) => {
+            images.push(image.filename);
+          });
+          data.images = images;
+        }
+        else {
+          
+          data.images = null;
+        }
+      } 
 
       const slug = slugify(data.title, {
         lower: true,
@@ -77,16 +82,17 @@ class productServices {
 
   transformUpdateData = async (req, existingData) => {
     try {
+      console.log(req.files);
       const data = {
         ...req.body,
       };
 
-      console.log(data);
+      // console.log(data);
 
       let images = [...existingData.images];
       if (req.files) {
         req.files.map((image) => {
-          images.push = image.filename;
+          images.push(image.filename);
         });
       }
       data.images = images;
@@ -159,11 +165,11 @@ class productServices {
   findOne = async (filter) => {
     try {
       const data = await ProductModel.findOne(filter)
-      .populate("categories", ["_id", "title", "slug"])
-      .populate("brand", ["_id", "title", "slug"])
-      .populate("sellerId", ["_id", "name", "email", "role"])
-      .populate("createdBy", ["_id", "name", "email", "role"])
-      .populate("updatedBy", ["_id", "name", "email", "role"])
+        .populate("categories", ["_id", "title", "slug"])
+        .populate("brand", ["_id", "title", "slug"])
+        .populate("sellerId", ["_id", "name", "email", "role"])
+        .populate("createdBy", ["_id", "name", "email", "role"])
+        .populate("updatedBy", ["_id", "name", "email", "role"]);
       if (!data) {
         throw { code: 400, message: "Data not found" };
       }
@@ -175,6 +181,7 @@ class productServices {
 
   update = async (filter, data) => {
     try {
+      console.log(data);
       const updateProduct = await ProductModel.findOneAndUpdate(filter, {
         $set: data,
       });
@@ -201,11 +208,11 @@ class productServices {
       const data = await ProductModel.find({
         status: "active",
       })
-      .populate("categories", ["_id", "title", "slug"])
-      .populate("brand", ["_id", "title", "slug"])
-      .populate("sellerId", ["_id", "name", "email", "role"])
-      .populate("createdBy", ["_id", "name", "email", "role"])
-      .populate("updatedBy", ["_id", "name", "email", "role"])
+        .populate("categories", ["_id", "title", "slug"])
+        .populate("brand", ["_id", "title", "slug"])
+        .populate("sellerId", ["_id", "name", "email", "role"])
+        .populate("createdBy", ["_id", "name", "email", "role"])
+        .populate("updatedBy", ["_id", "name", "email", "role"])
         .sort({ _id: "desc" })
         .limit(10);
       return data;

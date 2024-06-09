@@ -8,6 +8,7 @@ const { productCreateDTO, productUpdateDTO } = require("./product.dto");
 const productRoute = require("express").Router();
 
 productRoute.get("/home-list", productCtrl.listForHome);
+productRoute.get("/:slug/detail", productCtrl.getProductDetailBySlug);
 
 productRoute
   .route("/")

@@ -1,3 +1,4 @@
+const productServ = require("../product/product.services");
 const categoryServ = require("./category.services");
 
 class CategoryController {
@@ -107,6 +108,58 @@ class CategoryController {
         result: list,
         message: "Category listed for home page",
         meta: null,
+      });
+    } catch (exception) {
+      next(exception);
+    }
+  };
+
+  getCategoryBySlug = async (req, res, next) => {
+    try {
+      const slug = req.params.slug;
+      const categoryDetail = await categoryServ.findOne({
+        slug: slug,
+        status: "active",
+      });
+
+      const page = +req.query.page || 1;
+      const limit = +req.query.limit || 15;
+      const skip = (page - 1) * limit;
+
+      let filter = {
+        status: "active",
+        categories: { $in: [categoryDetail.id] },
+      };
+
+      if (req.query.search) {
+        filter = {
+          ...filter,
+          title: new RegExp(req.query.search, "i"),
+          summary: new RegExp(req.query.search, "i"),
+          description: new RegExp(req.query.search, "i")
+          
+        };
+      }
+      const totalCount1 = await productServ.count(filter)
+
+      const relatedProducts = await productServ.listAll({
+        limit: limit,
+        skip: skip,
+        filter: filter,
+      });
+
+      res.json({
+        result: {
+          categoryDetail: categoryDetail,
+          productList: relatedProducts,
+        },
+        message: "Product list by category slug",
+        meta: {
+          page:page,
+          limit:limit,
+          total : totalCount1
+          
+        },
       });
     } catch (exception) {
       next(exception);

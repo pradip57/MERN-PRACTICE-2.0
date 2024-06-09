@@ -29,7 +29,6 @@ class productServices {
       console.log(data);
 
       if (req.files) {
-        
         if (!(req.files.length === 0)) {
           let images = [];
 
@@ -37,12 +36,10 @@ class productServices {
             images.push(image.filename);
           });
           data.images = images;
-        }
-        else {
-          
+        } else {
           data.images = null;
         }
-      } 
+      }
 
       const slug = slugify(data.title, {
         lower: true,

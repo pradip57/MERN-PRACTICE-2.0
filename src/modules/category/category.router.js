@@ -8,6 +8,7 @@ const { categoryCreateDTO, categoryUpdateDTO } = require("./category.dto");
 const categoryRoute = require("express").Router();
 
 categoryRoute.get("/home-list", categoryCtrl.listForHome);
+categoryRoute.get("/:slug/detail",categoryCtrl.getCategoryBySlug)
 
 categoryRoute
   .route("/")

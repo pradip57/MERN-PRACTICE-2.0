@@ -3,7 +3,7 @@ const productServ = require("./product.services");
 class ProductController {
   create = async (req, res, next) => {
     try {
-      const payload =await productServ.transformCreateData(req);
+      const payload = await productServ.transformCreateData(req);
       const createdProduct = await productServ.store(payload);
 
       res.json({
@@ -69,12 +69,12 @@ class ProductController {
   update = async (req, res, next) => {
     try {
       const existingData = await productServ.findOne({ _id: req.params.id });
-      const payload =await productServ.transformUpdateData(req, existingData);
+      const payload = await productServ.transformUpdateData(req, existingData);
       const updateStatus = await productServ.update(
         { _id: req.params.id },
         payload
       );
-      
+
       res.json({
         result: updateStatus,
         message: "Product Updated Succesfully",
@@ -106,6 +106,37 @@ class ProductController {
       res.json({
         result: list,
         message: "Product listed for home page",
+        meta: null,
+      });
+    } catch (exception) {
+      next(exception);
+    }
+  };
+
+  getProductDetailBySlug = async (req, res, next) => {
+    try {
+      const slug = req.params.slug;
+      const filter = {
+        slug: slug,
+        status: "active",
+      };
+      const productDetail = await productServ.findOne(filter);
+      const relatedFilter = {
+        categories: { $in: productDetail.categories },
+        _id: { $ne: productDetail._id },
+        status: "active",
+      };
+      const relatedProducts = await productServ.listAll({
+        limit: 12,
+        skip: 0,
+        filter: relatedFilter,
+      });
+      res.json({
+        result: {
+          detail: productDetail,
+          relatedProduct: relatedProducts,
+        },
+        message: "Detail of product fetched by slug",
         meta: null,
       });
     } catch (exception) {

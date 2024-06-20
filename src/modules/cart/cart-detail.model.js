@@ -19,6 +19,7 @@ const CartDetailSchema = new mongoose.Schema(
     },
     productDetails: {
       title: String,
+      slug:String,
       price: Number,
       discount: Number,
       afterDiscount: Number,
@@ -45,12 +46,12 @@ const CartDetailSchema = new mongoose.Schema(
       default: false,
     },
     createdBy: {
-      type: String,
+      type: mongoose.Types.ObjectId,
       ref: "User",
       default: null,
     },
     updatedBy: {
-      type: String,
+      type: mongoose.Types.ObjectId,
       ref: "User",
       default: null,
     },

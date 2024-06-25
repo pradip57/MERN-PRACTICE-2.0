@@ -7,7 +7,7 @@ const { addToCartDTO } = require("./cart.dto");
 const cartRouter = require("express").Router();
 
 cartRouter.post(
-  "add-to-cart",
+  "/add-to-cart",
   auth,
   allowRole(["admin", "customer"]),
   bodyValidator(addToCartDTO),

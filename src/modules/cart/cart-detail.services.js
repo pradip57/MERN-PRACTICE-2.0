@@ -1,3 +1,5 @@
+const CartDetailModel = require("./cart-detail.model");
+
 class CartDetailServices {
   transformCartObject = (product, quantity, user) => {
     let currentCartData = {
@@ -19,11 +21,19 @@ class CartDetailServices {
       createdBy: req.authUser._id,
       updatedBy: req.authUser._id,
     };
+
+    return currentCartData;
   };
 
-  findOne = () =>{
-    
-  }
+  findOne = async (filter) => {
+    try{
+      const result  = await CartDetailModel.findOne(filter)
+      return result
+
+    }catch(exception){
+      throw exception
+    }
+  };
 }
 
 const cartDetailServ = new CartDetailServices();

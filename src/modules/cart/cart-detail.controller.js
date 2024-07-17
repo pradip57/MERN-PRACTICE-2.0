@@ -19,6 +19,23 @@ class CartDetailController {
         buyerId: req.authUser._id,
         orderId: null,
       });
+
+      if (existingCart) {
+        //update
+        if (quantity <= 0) {
+          //remove from cart
+        } else {
+          //update cart item
+          existingCart.quantity = quantity;
+          existingCart.amount = productDetails.afterDiscount * quantity;
+          existingCart.productDetails.price = productDetails.price;
+          existingCart.productDetails.discount = productDetails.discount;
+          existingCart.productDetails.afterDiscount =
+            productDetails.afterDiscount;
+        }
+      } else {
+        //store operation
+      }
     } catch (exception) {
       next(exception);
     }
